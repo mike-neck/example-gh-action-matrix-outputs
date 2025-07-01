@@ -27,7 +27,7 @@ jobs:
             name: dark
     outputs:
       value: "${{ steps.item.outputs.value }}"
-    if: inputs.key == matrix.build.key
+    if: ${{ inputs.key == matrix.build.key }}
     steps:
       - name: item
         id: item
