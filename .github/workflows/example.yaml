@@ -1,0 +1,43 @@
+name: example
+on:
+  workflow_dispatch:
+    inputs:
+      key:
+        required: true
+        default: main
+        options:
+          - main
+          - sub
+          - back
+
+jobs:
+  root:
+    runs-on: 'ubuntu-24.04'
+    strategy:
+      matrix:
+        build:
+          - key: main
+            name: star
+          - key: sub
+            name: moon
+          - key: back
+            name: dark
+    outputs:
+      value: "${{ steps.item.outputs.value }}"
+    if: "${{ inputs.key }}" == "${{ matrix.build.key }}"
+    steps:
+      - name: item
+        id: item
+        run: |
+          echo "value=${{ matrix.build.key }}:${{ matrix.build.name }}" | tee -a "${GITHUB_OUTPUT}"
+
+  child:
+    runs-on: ubuntu-24.04
+    needs: [root]
+    name: "Show ${{ needs.root.outputs.value }}"
+    steps:
+      - name: show
+        run: |
+          printf "key: %s\n" "$(cut -d: -f1 <<< "${{ needs.root.outputs.value }}")"
+          printf "value: %s\n" "$(cut -d: -f2 <<< "${{ needs.root.outputs.value }}")"
+
