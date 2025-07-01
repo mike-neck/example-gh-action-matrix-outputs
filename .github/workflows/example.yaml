@@ -18,7 +18,9 @@ jobs:
     runs-on: 'ubuntu-24.04'
     strategy:
       matrix:
-        build:
+        key: [main, sub, back]
+        name: [star, moon, dark]
+        include:
           - key: main
             name: star
           - key: sub
