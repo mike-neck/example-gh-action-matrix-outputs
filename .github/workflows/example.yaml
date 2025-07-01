@@ -27,9 +27,9 @@ jobs:
             name: dark
     outputs:
       value: "${{ steps.item.outputs.value }}"
-    if: ${{ inputs.key == matrix.key }}
     steps:
       - name: item
+        if: ${{ inputs.key == matrix.key }}
         id: item
         run: |
           echo "value=${{ matrix.key }}:${{ matrix.name }}" | tee -a "${GITHUB_OUTPUT}"
