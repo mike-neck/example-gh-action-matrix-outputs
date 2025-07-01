@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       key:
+        description: select key
         required: true
         default: main
         options:
@@ -40,4 +41,5 @@ jobs:
         run: |
           printf "key: %s\n" "$(cut -d: -f1 <<< "${{ needs.root.outputs.value }}")"
           printf "value: %s\n" "$(cut -d: -f2 <<< "${{ needs.root.outputs.value }}")"
+
 
