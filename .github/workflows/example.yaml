@@ -6,6 +6,7 @@ on:
         description: select key
         required: true
         default: main
+        type: choice
         options:
           - main
           - sub
@@ -13,6 +14,7 @@ on:
 
 jobs:
   root:
+    name: root
     runs-on: 'ubuntu-24.04'
     strategy:
       matrix:
@@ -25,7 +27,7 @@ jobs:
             name: dark
     outputs:
       value: "${{ steps.item.outputs.value }}"
-    if: "${{ inputs.key }}" == "${{ matrix.build.key }}"
+    if: inputs.key == matrix.build.key
     steps:
       - name: item
         id: item
@@ -34,12 +36,11 @@ jobs:
 
   child:
     runs-on: ubuntu-24.04
-    needs: [root]
+    needs: [ root ]
     name: "Show ${{ needs.root.outputs.value }}"
     steps:
       - name: show
         run: |
           printf "key: %s\n" "$(cut -d: -f1 <<< "${{ needs.root.outputs.value }}")"
           printf "value: %s\n" "$(cut -d: -f2 <<< "${{ needs.root.outputs.value }}")"
-
 
